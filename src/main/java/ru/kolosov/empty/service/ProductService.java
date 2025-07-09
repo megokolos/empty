@@ -48,14 +48,14 @@ public class ProductService {
         for (ProductDTO dto : requestProducts.getProductDTOList()) {
             names.add(dto.getName());
         }
-        Optional<List<Product>> optionalProducts = productRepository.findProductsByName(names);
+        List<Product> optionalProducts = productRepository.findProductsByName(names);
         if (optionalProducts.isEmpty()) {
             log.warn("Ничего нет по заявке");
             throw new NoSuchElementException();
         }
         Map<String, Long> productsWithQuantity = new HashMap<>();
 
-        for (Product product : optionalProducts.get()) {
+        for (Product product : optionalProducts) {
             productsWithQuantity.put(product.getName(),
                     productsWithQuantity.getOrDefault(product.getName(), 0L) + product.getQuantity());
         }

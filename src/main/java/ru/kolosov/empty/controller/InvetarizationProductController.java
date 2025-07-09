@@ -2,6 +2,8 @@ package ru.kolosov.empty.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kolosov.empty.dto.ProductDTO;
@@ -17,8 +19,9 @@ public class InvetarizationProductController {
     private final ProductService productService;
 
     @PostMapping("/save")
-    public void save(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<Void> save(@Valid @RequestBody ProductDTO productDTO) {
         productService.save(productDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/update")

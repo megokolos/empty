@@ -16,7 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> getProductByName(String name);
 
     @Query("from Product where name in :names")
-    Optional<List<Product>> findProductsByName(@Param("names") List<String> names);
+    List<Product> findProductsByName(@Param("names") List<String> names);
 
     boolean existsByName(String name);
 }
