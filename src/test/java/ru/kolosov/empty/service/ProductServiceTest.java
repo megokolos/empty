@@ -14,10 +14,10 @@ import ru.kolosov.empty.dto.response.ResponseProducts;
 import ru.kolosov.empty.model.Product;
 import ru.kolosov.empty.repository.ProductRepository;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RequiredArgsConstructor
@@ -59,6 +59,20 @@ class ProductServiceTest {
     }
 
     @Test
+    void update_NoProduct() {
+        ProductDTO dto = new ProductDTO("apple", 10L);
+        productService.save(dto);
+        assertThrows(NoSuchElementException.class, () -> productService.update(new ProductDTO("cannon", 1L)));
+    }
+
+    @Test
+    void update_NotEnoughProduct() {
+        ProductDTO dto = new ProductDTO("apple", 10L);
+        productService.save(dto);
+        assertThrows(NoSuchElementException.class, () -> productService.update(new ProductDTO("apple", 100L)));
+    }
+
+    @Test
     public void getQuantity_CorrectNumbers() {
         ProductDTO dtoApple = new ProductDTO("apple", 10L);
         productService.save(dtoApple);
@@ -83,5 +97,11 @@ class ProductServiceTest {
                 .filter(elem -> elem.getName().equals("orange"))
                 .map(ProductDTO::getQuantity)
                 .findFirst().get());
+    }
+
+    @Test
+    public void getQuantity_WithNothing_ExceptionThrow() {
+        RequestProducts requestProducts = new RequestProducts();
+        assertThrows(NoSuchElementException.class,() -> productService.getQuantity(requestProducts));
     }
 }
