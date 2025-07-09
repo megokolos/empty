@@ -1,0 +1,28 @@
+services:
+  database:
+    image: postgres:16
+    container_name: my_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME_DOCKER}
+      POSTGRES_USER: ${DB_LOGIN_DOCKER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_DOCKER}
+    ports:
+      - "5120:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  app:
+    image: megokolos/empty:latest
+    container_name: my_app
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${DB_NAME_DOCKER}
+      SPRING_DATASOURCE_USERNAME: ${DB_LOGIN_DOCKER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD_DOCKER}
+    ports:
+      - "2507:8080"
+
+volumes:
+  pg_data:
